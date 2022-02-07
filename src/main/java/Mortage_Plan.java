@@ -4,8 +4,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-
 import utilities.Utilities;
 
 public class Mortage_Plan {
@@ -149,8 +147,7 @@ public class Mortage_Plan {
                 prospectList.add(newProspect);
             }
         }
-
-        return prospectList.toArray(Prospect[]::new);
+        return prospectList.stream().toArray(Prospect[]::new); //https://stackoverflow.com/questions/52720685/no-suitable-method-found-for-arrayliststring-toarraystringnew-in-return
     }
 
     /**
