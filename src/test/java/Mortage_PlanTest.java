@@ -82,4 +82,14 @@ class MortagePlanTest {
         int[] decimals = Mortage_Plan.attemptReadDecimal("12");
         Assertions.assertTrue(decimals[0] == 12 && decimals[1] == 0);
     }
+    @Test
+    void powerTest(){
+        Assertions.assertEquals(Utilities.power(5,2), 25);
+        Assertions.assertEquals(Utilities.power(2,4), 16);
+        Assertions.assertEquals(Utilities.power(25,0), 1);
+        Assertions.assertEquals(Utilities.power(1,1), 1);
+        Assertions.assertEquals(Utilities.power(1,4), 1);
+    }
+
+
 }

@@ -12,4 +12,21 @@ public class Utilities {
         sb.deleteCharAt(pos);
         return sb.toString();
     }
+
+    /**
+     * Power abstraction
+     * @param input Value to power
+     * @param power Power
+     * @return input^power
+     */
+    public static double power(double input, int power){
+        if(power == 0){
+            return 1;
+        }
+        double output = input;
+        for(int i = 1; i < power; i++){
+            output *= input;
+        }
+        return output;
+    }
 }

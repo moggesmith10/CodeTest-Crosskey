@@ -78,16 +78,16 @@ public class Mortage_Plan {
         double interestPercent = (double)interest[0] / 100 + ((double)interest[1] / 100) / 100;
 
         //Calculate U(b(1 + b)^p). Lets call this X. Now E = X / ((1 + b)^p - 1)
-        double totalInterestCost = (double) totalLoan[0] * (interestPercent * power((interestPercent + 1), payments));
-        double totalInterestCostDecimal = (double) totalLoan[1] * (interestPercent * power((interestPercent + 1), payments));
+        double totalInterestCost = (double) totalLoan[0] * (interestPercent * Utilities.power((interestPercent + 1), payments));
+        double totalInterestCostDecimal = (double) totalLoan[1] * (interestPercent * Utilities.power((interestPercent + 1), payments));
 
         //Shave of remaining decimals to separate var
         totalInterestCostDecimal += totalInterestCost % 1 * 100;
         totalInterestCost -= totalInterestCost % 1;
 
         //E = X / ((1 + b)^p - 1)
-        double MonthlyPayment = totalInterestCost / (power(1 + interestPercent, payments) - 1);
-        double MonthlyPaymentDecimal = totalInterestCostDecimal / (power(1 + interestPercent, payments) - 1);   //Calculate decimal separately out of principle.
+        double MonthlyPayment = totalInterestCost / (Utilities.power(1 + interestPercent, payments) - 1);
+        double MonthlyPaymentDecimal = totalInterestCostDecimal / (Utilities.power(1 + interestPercent, payments) - 1);   //Calculate decimal separately out of principle.
                                                                                                                             //Can easily be changed
         //Add decimals to Decimal variable
         MonthlyPaymentDecimal += MonthlyPayment % 1 * 100;
@@ -110,22 +110,7 @@ public class Mortage_Plan {
         return new int[] {(int)MonthlyPayment, (int)MonthlyPaymentDecimal};
     }
 
-    /**
-     * Power abstraction
-     * @param input Value to power
-     * @param power Power
-     * @return input^power
-     */
-    static double power(double input, int power){
-        if(power == 0){
-            return 1;
-        }
-        double output = input;
-        for(int i = 1; i < power; i++){
-            output *= input;
-        }
-        return output;
-    }
+
 
     /**
      * Read prospects from file
