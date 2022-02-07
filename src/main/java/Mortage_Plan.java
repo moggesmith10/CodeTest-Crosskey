@@ -47,9 +47,8 @@ public class Mortage_Plan {
         //If line contains '"', it means the name of prospect might contain a comma.
         List<Integer> commasInName = getCommas(line);
         //Temporarily remove commas in name
-        Utilities utils = new Utilities(); //Import utils
         for(Integer pos: commasInName){
-            line = utils.removeAtPosition(line, pos);
+            line = Utilities.removeAtPosition(line, pos);
         }
 
         String[] elements = line.split(",");
@@ -76,7 +75,7 @@ public class Mortage_Plan {
         if(line.charAt(0) == '\"'){
             //Loop until next '"'
             int i = 1;
-            while(line.charAt(i) != '\"' || i == line.length()){
+            while(line.charAt(i) != '\"' && i <= line.length()){
                 i++;
                 //Check if current char is comma
                 if(line.charAt(i) == ','){
@@ -111,8 +110,14 @@ public class Mortage_Plan {
      * @return int[2] with both whole number and decimal (if no decimal is provided it will be 0)
      */
     static int[] attemptReadDecimal(String input){
-        String[] elements = input.split(decimalDenominator);
-
+        String[] elements;
+        if(input.contains(decimalDenominator)) {
+            elements = input.split(decimalDenominator);
+        }
+        else{
+            elements = new String[1];
+            elements[0] = input;
+        }
         int[] toReturn = new int[2];
         toReturn[0] = Integer.parseInt(elements[0]);
         if(elements.length == 2){
@@ -139,5 +144,25 @@ class Prospect{
         InterestDecimal = interestDecimal;
         Years = years;
         Valid = valid;
+    }
+
+    //https://www.javaprogramto.com/2020/08/how-to-compare-two-objects-in-java-8.html
+    @Override
+    public boolean equals(Object o){
+        if(this == o){
+            return true;
+        }
+        if(o == null || getClass() != o.getClass()){
+            return false;
+        }
+        Prospect p = (Prospect)o;
+        
+        return p.Valid == this.Valid
+                && p.Interest == this.Interest
+                && p.InterestDecimal == this.InterestDecimal
+                && p.Name.compareTo(this.Name) == 0 //https://www.w3schools.com/java/ref_string_compareto.asp
+                && p.TotalLoan == this.TotalLoan
+                && p.TotalLoanDecimal == this.TotalLoanDecimal
+                && p.Years == this.Years;
     }
 }
