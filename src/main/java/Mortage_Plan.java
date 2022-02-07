@@ -49,6 +49,8 @@ public class Mortage_Plan {
         File inputFile = new File(fileName);
         Scanner reader = new Scanner(inputFile);
 
+        reader.nextLine();//Skip first line, it contains column titles
+
         while(reader.hasNextLine()){
             Prospect newProspect = attemptReadProspect(reader.nextLine());
             if(newProspect.Valid) {
@@ -59,26 +61,31 @@ public class Mortage_Plan {
         return prospectList.toArray(Prospect[]::new);
     }
 
-    static Prospect attemptReadProspect(String line){
+    static Prospect attemptReadProspect(String line) {
 
         //If line contains '"', it means the name of prospect might contain a comma.
         List<Integer> commasInName = getCommas(line);
         //Temporarily remove commas in name
-        for(Integer pos: commasInName){
+        for (Integer pos : commasInName) {
             line = Utilities.removeAtPosition(line, pos);
         }
 
         String[] elements = line.split(",");
+        if (elements.length == 4) {
 
-        int[] totalLoan = attemptReadDecimal(elements[1]);
-        int[] interest = attemptReadDecimal(elements[2]);
-        int years = Integer.parseInt(elements[3]);
+            int[] totalLoan = attemptReadDecimal(elements[1]);
+            int[] interest = attemptReadDecimal(elements[2]);
+            int years = Integer.parseInt(elements[3]);
 
-        return new Prospect(reFormatName(elements[0], commasInName) //Name
-                , totalLoan[0], totalLoan[1]                        //Total loan
-                , interest[0], interest[1]                          //Interest
-                , years                                             //Years
-                , Boolean.TRUE);                                    //Valid
+            return new Prospect(reFormatName(elements[0], commasInName) //Name
+                    , totalLoan[0], totalLoan[1]                        //Total loan
+                    , interest[0], interest[1]                          //Interest
+                    , years                                             //Years
+                    , Boolean.TRUE);                                    //Valid
+        }
+        else{
+            return new Prospect("Invalid", 0, 0, 0,0, 0,false);
+        }
     }
 
     /**
@@ -88,6 +95,11 @@ public class Mortage_Plan {
      */
     static List<Integer> getCommas(String line){
         List<Integer> commasInName = new ArrayList<>();
+
+        //check if line is empty
+        if(line.length() == 0){
+            return commasInName;
+        }
 
         if(line.charAt(0) == '\"'){
             //Loop until next '"'
@@ -129,7 +141,7 @@ public class Mortage_Plan {
     static int[] attemptReadDecimal(String input){
         String[] elements;
         if(input.contains(decimalDenominator)) {
-            elements = input.split(decimalDenominator);
+            elements = input.split("\\" + decimalDenominator);
         }
         else{
             elements = new String[1];
