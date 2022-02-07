@@ -49,6 +49,13 @@ class MortagePlanTest {
 
         Assertions.assertEquals(prospect, newProspect);
     }
+    @Test
+    void testReadComplicatedProspect(){
+        Prospect prospect = new Prospect("\"Clarencé,Andersson\"", 2000, 0,6,87, 4, Boolean.TRUE);
+        Prospect newProspect = Mortage_Plan.attemptReadProspect("\"Clarencé,Andersson\",2000,6.87,4");
+
+        Assertions.assertEquals(prospect, newProspect);
+    }
 
     @Test
     void attemptReadDecimal() {
