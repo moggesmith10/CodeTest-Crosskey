@@ -27,7 +27,7 @@ public class Mortage_Plan {
     }
 
     static Prospect[] getProspects(String fileName) throws FileNotFoundException {
-        List<Prospect> prospectList = new ArrayList<Prospect>();
+        List<Prospect> prospectList = new ArrayList<>();
 
         File inputFile = new File(fileName);
         Scanner reader = new Scanner(inputFile);
@@ -39,10 +39,8 @@ public class Mortage_Plan {
             }
         }
 
-        Prospect[] prospects = prospectList.toArray(Prospect[]::new);
-
-        return prospects;
-    };
+        return prospectList.toArray(Prospect[]::new);
+    }
 
     static Prospect attemptReadProspect(String line){
 
@@ -52,7 +50,7 @@ public class Mortage_Plan {
         Utilities utils = new Utilities(); //Import utils
         for(Integer pos: commasInName){
             line = utils.removeAtPosition(line, pos);
-        };
+        }
 
         String[] elements = line.split(",");
 
@@ -65,7 +63,7 @@ public class Mortage_Plan {
                 , interest[0], interest[1]                          //Interest
                 , years                                             //Years
                 , Boolean.TRUE);                                    //Valid
-    };
+    }
 
     /**
      * Get list of all commas in string in quotations
@@ -73,7 +71,7 @@ public class Mortage_Plan {
      * @return List of commas
      */
     static List<Integer> getCommas(String line){
-        List<Integer> commasInName = new ArrayList<Integer>();
+        List<Integer> commasInName = new ArrayList<>();
 
         if(line.charAt(0) == '\"'){
             //Loop until next '"'
@@ -120,9 +118,7 @@ public class Mortage_Plan {
         if(elements.length == 2){
             toReturn[1] = Integer.parseInt(elements[1]);
         }
-        else{
-            toReturn[1] = 0;
-        }
+        //Note toReturn[1] is already set to 0
         return toReturn;
     }
 }
@@ -136,7 +132,7 @@ class Prospect{
     boolean Valid; //Check if this prospect read correctly and is valid to use
 
     public Prospect(String name, int totalLoan, int totalLoanDecimal, int interest, int interestDecimal, int years, boolean valid){
-        name = name;
+        Name = name;
         TotalLoan = totalLoan;
         TotalLoanDecimal = totalLoanDecimal;
         Interest = interest;
