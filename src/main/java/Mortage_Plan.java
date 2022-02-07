@@ -16,34 +16,40 @@ import utilities.*;
 public class Mortage_Plan {
 
     static String decimalDenominator = ".";
+    static int roundUpOver = 5; //Round up if decimal is higher than this
 
     public static void main(String[] args){
 
         String inputFileDir;
-
+        //Check for dir in args
         if(args.length == 0){
-            System.out.println("Please enter file directory: ");
             Console c = System.console();
             if(c == null){
                 System.out.println("No console found. Please enter directory as argument...");
                 System.exit(1);
             }
+            //Prompt for dir
+            System.out.println("Please enter file directory: ");
             inputFileDir = c.readLine();
         }
         else{
+            //If dir found in args, use that
             inputFileDir = args[0];
         }
 
+        //Get all prospects
         Prospect[] prospects;
         try{
             prospects = getProspects(inputFileDir);
         }
+        //Catch if file not found
         catch ( FileNotFoundException error){
             System.out.printf("File \"%s\" not found. Exiting...%n", inputFileDir);
             System.exit(0);
             prospects = new Prospect[0];//Stops warning. Never able to run
         }
 
+        //Loop through all prospects and display them
         int index = 0;
         for(Prospect p : prospects){
             DisplayProspect(p, ++index);
@@ -61,12 +67,13 @@ public class Mortage_Plan {
      * @param p Prospect to calculate
      * @return int[2] with monthly payment
      */
-    //E = U(b(1 + b)^p) / ((1 + b)^p - 1)
-    //E = Monthly Payment
-    //U = Loan amount
-    //b = Interest percent
-    //p = payments (i.e years * 12)
     static int[] CalculateMonthlyPayment(Prospect p){
+        //E = U(b(1 + b)^p) / ((1 + b)^p - 1)
+        //E = Monthly Payment
+        //U = Loan amount
+        //b = Interest percent
+        //p = payments (i.e years * 12)
+
         //Abstraction
         int[] interest = {p.Interest, p.InterestDecimal};
         int[] totalLoan = {p.TotalLoan, p.TotalLoanDecimal};
@@ -87,11 +94,11 @@ public class Mortage_Plan {
 
         //E = X / ((1 + b)^p - 1)
         float MonthlyPayment = totalInterestCost / (float)(power(1 + interestPercent, payments) - 1);
-        float MonthlyPaymentDecimal = totalInterestCostDecimal / (float)(power(1 + interestPercent, payments) - 1);
-
+        float MonthlyPaymentDecimal = totalInterestCostDecimal / (float)(power(1 + interestPercent, payments) - 1);   //Calculate decimal separately out of principle.
+                                                                                                                            //Can easily be changed
         //Add decimals to Decimal variable
         MonthlyPaymentDecimal += MonthlyPayment % 1 * 100;
-        MonthlyPayment -= MonthlyPayment % 1; //Remove decimals
+        MonthlyPayment -= MonthlyPayment % 1; //Remove decimals from main variable
 
         //Add back excess decimals to main var (123.456 -> 127.056)
         while(MonthlyPaymentDecimal > 100){
@@ -100,7 +107,7 @@ public class Mortage_Plan {
         }
 
         //Round decimal
-        if(MonthlyPaymentDecimal % 1 > 0.5){
+        if(MonthlyPaymentDecimal % 1 > (float)roundUpOver / 10){ //If decimal is larger than roundUpOver (default 5), round up. 12.7 -> 13
             MonthlyPaymentDecimal++;
         }
         //Now remove excess
