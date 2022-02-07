@@ -56,8 +56,30 @@ class MortagePlanTest {
 
         Assertions.assertEquals(prospect, newProspect);
     }
+    @Test
+    void testMortageCalculations(){                                                               //Note Clarence normally has 6,0% interest, testing 6,87% to test decimals
+        Prospect prospect = new Prospect("\"Clarencé,Andersson\"", 2000, 0,6,87, 4, Boolean.TRUE);
+        int[] test = Mortage_Plan.CalculateMonthlyPayment(prospect);
+
+        Assertions.assertTrue(test[0] == 143 && test[1] == 30);
+        /*
+        2000(0,0687(1,0687)^48) / 1,0687^48 - 1
+        = 2000(0,0687 * 24,27057) / 23,27057
+        = 2000 * 1,66738 / 23,27057
+        = 3334,76 / 23,27057
+        = 143,3037
+        =~143,30
+         */
+    }
 
     @Test
-    void attemptReadDecimal() {
+    void attemptReadDecimalWithDecimal() {
+        int[] decimals = Mortage_Plan.attemptReadDecimal("12.3");
+        Assertions.assertTrue(decimals[0] == 12 && decimals[1] == 3);
+    }
+    @Test
+    void attemptReadDecimalWithoutDecimal() {
+        int[] decimals = Mortage_Plan.attemptReadDecimal("12");
+        Assertions.assertTrue(decimals[0] == 12 && decimals[1] == 0);
     }
 }

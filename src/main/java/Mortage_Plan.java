@@ -1,17 +1,12 @@
-import javax.swing.*;
 import java.io.Console;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Constructor;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 
 import utilities.Utilities;
-import  utilities.Utilities.*;
-import utilities.*;
 
 public class Mortage_Plan {
 
@@ -82,19 +77,19 @@ public class Mortage_Plan {
         //Use floats since we are dealing with division
 
         //Calculate b
-        float interestPercent = (float)interest[0] / 100 + ((float)interest[1] / 100) / 100;
+        double interestPercent = (double)interest[0] / 100 + ((double)interest[1] / 100) / 100;
 
         //Calculate U(b(1 + b)^p). Lets call this X. Now E = X / ((1 + b)^p - 1)
-        float totalInterestCost = (float) totalLoan[0] * (interestPercent * power((interestPercent + 1), payments));
-        float totalInterestCostDecimal = (float) totalLoan[1] * (interestPercent * power((interestPercent + 1), payments));
+        double totalInterestCost = (double) totalLoan[0] * (interestPercent * power((interestPercent + 1), payments));
+        double totalInterestCostDecimal = (double) totalLoan[1] * (interestPercent * power((interestPercent + 1), payments));
 
         //Shave of remaining decimals to separate var
         totalInterestCostDecimal += totalInterestCost % 1 * 100;
         totalInterestCost -= totalInterestCost % 1;
 
         //E = X / ((1 + b)^p - 1)
-        float MonthlyPayment = totalInterestCost / (float)(power(1 + interestPercent, payments) - 1);
-        float MonthlyPaymentDecimal = totalInterestCostDecimal / (float)(power(1 + interestPercent, payments) - 1);   //Calculate decimal separately out of principle.
+        double MonthlyPayment = totalInterestCost / (power(1 + interestPercent, payments) - 1);
+        double MonthlyPaymentDecimal = totalInterestCostDecimal / (power(1 + interestPercent, payments) - 1);   //Calculate decimal separately out of principle.
                                                                                                                             //Can easily be changed
         //Add decimals to Decimal variable
         MonthlyPaymentDecimal += MonthlyPayment % 1 * 100;
@@ -107,7 +102,7 @@ public class Mortage_Plan {
         }
 
         //Round decimal
-        if(MonthlyPaymentDecimal % 1 > (float)roundUpOver / 10){ //If decimal is larger than roundUpOver (default 5), round up. 12.7 -> 13
+        if(MonthlyPaymentDecimal % 1 > (double)roundUpOver / 10){ //If decimal is larger than roundUpOver (default 5), round up. 12.7 -> 13
             MonthlyPaymentDecimal++;
         }
         //Now remove excess
@@ -123,11 +118,11 @@ public class Mortage_Plan {
      * @param power Power
      * @return input^power
      */
-    static float power(float input, int power){
+    static double power(double input, int power){
         if(power == 0){
             return 1;
         }
-        float output = input;
+        double output = input;
         for(int i = 1; i < power; i++){
             output *= input;
         }
@@ -207,7 +202,7 @@ public class Mortage_Plan {
         if(line.charAt(0) == '\"'){
             //Loop until next '"'
             int i = 1;
-            while(line.charAt(i) != '\"' && i <= line.length()){
+            while(line.charAt(i) != '\"' && i <= line.length()){//TODO understand why i <= line.length() always true warning
                 i++;
                 //Check if current char is comma
                 if(line.charAt(i) == ','){
