@@ -39,11 +39,100 @@ public class Mortage_Plan {
             prospects = getProspects(inputFileDir);
         }
         catch ( FileNotFoundException error){
-            System.out.printf("File \"%s\" not found. Exiting...%n", args[0]);
+            System.out.printf("File \"%s\" not found. Exiting...%n", inputFileDir);
             System.exit(0);
+            prospects = new Prospect[0];//Stops warning. Never able to run
+        }
+
+        int index = 0;
+        for(Prospect p : prospects){
+            DisplayProspect(p, ++index);
         }
     }
 
+    static void DisplayProspect(Prospect p, int index){
+        int[] MonthlyPayment = CalculateMonthlyPayment(p);
+        System.out.printf("Prospect %d: %s wants to borrow %d.%d for a period of %d years and pay %d.%d € each month\n",
+                index, p.Name, p.TotalLoan, p.TotalLoanDecimal, p.Years, MonthlyPayment[0], MonthlyPayment[1]);
+    }
+
+    /**
+     * Calculates monthly payment for prospect
+     * @param p Prospect to calculate
+     * @return int[2] with monthly payment
+     */
+    //E = U(b(1 + b)^p) / ((1 + b)^p - 1)
+    //E = Monthly Payment
+    //U = Loan amount
+    //b = Interest percent
+    //p = payments (i.e years * 12)
+    static int[] CalculateMonthlyPayment(Prospect p){
+        //Abstraction
+        int[] interest = {p.Interest, p.InterestDecimal};
+        int[] totalLoan = {p.TotalLoan, p.TotalLoanDecimal};
+        int payments = p.Years * 12;
+
+        //Use floats since we are dealing with division
+
+        //Calculate b
+        float interestPercent = (float)interest[0] / 100 + ((float)interest[1] / 100) / 100;
+
+        //Calculate U(b(1 + b)^p). Lets call this X. Now E = X / ((1 + b)^p - 1)
+        float totalInterestCost = (float) totalLoan[0] * (interestPercent * power((interestPercent + 1), payments));
+        float totalInterestCostDecimal = (float) totalLoan[1] * (interestPercent * power((interestPercent + 1), payments));
+
+        //Shave of remaining decimals to separate var
+        totalInterestCostDecimal += totalInterestCost % 1 * 100;
+        totalInterestCost -= totalInterestCost % 1;
+
+        //E = X / ((1 + b)^p - 1)
+        float MonthlyPayment = totalInterestCost / (float)(power(1 + interestPercent, payments) - 1);
+        float MonthlyPaymentDecimal = totalInterestCostDecimal / (float)(power(1 + interestPercent, payments) - 1);
+
+        //Add decimals to Decimal variable
+        MonthlyPaymentDecimal += MonthlyPayment % 1 * 100;
+        MonthlyPayment -= MonthlyPayment % 1; //Remove decimals
+
+        //Add back excess decimals to main var (123.456 -> 127.056)
+        while(MonthlyPaymentDecimal > 100){
+            MonthlyPayment++;
+            MonthlyPaymentDecimal -= 100;
+        }
+
+        //Round decimal
+        if(MonthlyPaymentDecimal % 1 > 0.5){
+            MonthlyPaymentDecimal++;
+        }
+        //Now remove excess
+        MonthlyPaymentDecimal -= MonthlyPaymentDecimal % 1;
+
+        //Back to ints now that everything is rounded
+        return new int[] {(int)MonthlyPayment, (int)MonthlyPaymentDecimal};
+    }
+
+    /**
+     * Power abstraction
+     * @param input Value to power
+     * @param power Power
+     * @return input^power
+     */
+    static float power(float input, int power){
+        if(power == 0){
+            return 1;
+        }
+        float output = input;
+        for(int i = 1; i < power; i++){
+            output *= input;
+        }
+        return output;
+    }
+
+    /**
+     * Read prospects from file
+     * @param fileName Directory of file to read
+     * @return List of prospects read from file
+     * @throws FileNotFoundException If not file found
+     */
     static Prospect[] getProspects(String fileName) throws FileNotFoundException {
         List<Prospect> prospectList = new ArrayList<>();
 
@@ -62,6 +151,11 @@ public class Mortage_Plan {
         return prospectList.toArray(Prospect[]::new);
     }
 
+    /**
+     * Reads prospect from input string
+     * @param line String to read prospect from
+     * @return Prospect read from line
+     */
     static Prospect attemptReadProspect(String line) {
 
         //If line contains '"', it means the name of prospect might contain a comma.
@@ -87,6 +181,7 @@ public class Mortage_Plan {
         else{
             return new Prospect("Invalid", 0, 0, 0,0, 0,false);
         }
+        //TODO more checks
     }
 
     /**
