@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.io.Console;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.reflect.Constructor;
@@ -16,9 +17,25 @@ public class Mortage_Plan {
     static String decimalDenominator = ".";
 
     public static void main(String[] args){
+
+        String inputFileDir;
+
+        if(args.length == 0){
+            System.out.println("Please enter file directory: ");
+            Console c = System.console();
+            if(c == null){
+                System.out.println("No console found. Please enter directory as argument...");
+                System.exit(1);
+            }
+            inputFileDir = c.readLine();
+        }
+        else{
+            inputFileDir = args[0];
+        }
+
         Prospect[] prospects;
         try{
-            prospects = getProspects(args[0]);
+            prospects = getProspects(inputFileDir);
         }
         catch ( FileNotFoundException error){
             System.out.printf("File \"%s\" not found. Exiting...%n", args[0]);
@@ -156,7 +173,7 @@ class Prospect{
             return false;
         }
         Prospect p = (Prospect)o;
-        
+
         return p.Valid == this.Valid
                 && p.Interest == this.Interest
                 && p.InterestDecimal == this.InterestDecimal
