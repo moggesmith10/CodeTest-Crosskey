@@ -3,7 +3,7 @@ public class Utilities {
     /**
      * Abstraction of StringBuilder.deleteCharAt
      * @param input Input string
-     * @param pos Index of char to remove
+     * @param pos Index of char to remove (starts at 0)
      * @return Formatted string
      */
 

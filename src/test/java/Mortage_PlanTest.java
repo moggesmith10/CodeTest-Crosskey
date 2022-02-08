@@ -14,13 +14,11 @@ class MortagePlanTest {
         verify.add(5);
         Assertions.assertEquals(verify, Mortage_Plan.getCommas("\"test,\","));
     }
-
     @Test
     void getCommasCheckWithoutCommas(){
         List<Integer> verify = new ArrayList<>();
         Assertions.assertEquals(verify, Mortage_Plan.getCommas("Normal name, 123"));
     }
-
     @Test
     void reFormatName() {
         List<Integer> verify = new ArrayList<>();
@@ -28,7 +26,6 @@ class MortagePlanTest {
         String testName = Mortage_Plan.reFormatName("test name", verify);
         Assertions.assertEquals(testName, "test, name");
     }
-
     @Test
     void testEntireFormatting(){
         String name = "\"Sir, test name\", 123";
@@ -41,7 +38,6 @@ class MortagePlanTest {
 
         Assertions.assertEquals(name, toVerify);
     }
-
     @Test
     void testReadSimpleProspect(){
         Prospect prospect = new Prospect("Juha", 1000, 0,5,0, 2, Boolean.TRUE);
@@ -71,7 +67,6 @@ class MortagePlanTest {
         =~143,30
          */
     }
-
     @Test
     void attemptReadDecimalWithDecimal() {
         int[] decimals = Mortage_Plan.attemptReadDecimal("12.3");
@@ -90,6 +85,15 @@ class MortagePlanTest {
         Assertions.assertEquals(Utilities.power(1,1), 1);
         Assertions.assertEquals(Utilities.power(1,4), 1);
     }
-
-
+    @Test
+    void removeAtPositionTest(){
+        String string1 = "abcd";
+        String string2 = Utilities.removeAtPosition("abxcd", 2);
+        Assertions.assertEquals(string1, string2);
+    }
+    @Test
+    void tryGetInputDirectoryTest(){
+        String input = Mortage_Plan.getInputFileDirectory(new String[]{"input"});
+        Assertions.assertEquals("input", input);
+    }
 }

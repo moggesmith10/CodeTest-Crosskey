@@ -6,13 +6,61 @@ import java.util.List;
 import java.util.Scanner;
 import utilities.Utilities;
 
+import javax.sound.midi.SysexMessage;
+
 public class Mortage_Plan {
 
     static String decimalDenominator = ".";
     static int roundUpOver = 5; //Round up if decimal is higher than this
 
     public static void main(String[] args){
+        //Get input dir
+        String inputFileDir = getInputFileDirectory(args);
 
+        //Get all prospects
+        Prospect[] prospects = fetchProspects(inputFileDir);
+
+        //Display all prospects
+        loopProspects(prospects);
+    }
+
+    /**
+     * Reads prospects from given file
+     * @param inputFileDir Directory of file to read
+     * @return Array of prospects
+     */
+    static Prospect[] fetchProspects(String inputFileDir){
+        Prospect[] prospects;
+        try{
+            prospects = getProspects(inputFileDir);
+        }
+        //Catch if file not found
+        catch ( FileNotFoundException error){
+            System.out.printf("File \"%s\" not found. Exiting...%n", inputFileDir);
+            System.exit(0);
+            prospects = new Prospect[0];//Stops warning. Never able to run
+        };
+        return prospects;
+    }
+
+    /**
+     * Loops and displays all prospects in array
+     * @param prospects array of prospects
+     */
+    static void loopProspects(Prospect[] prospects){
+        //Loop through all prospects and display them
+        int index = 0;
+        for(Prospect p : prospects){
+            DisplayProspect(p, ++index);
+        }
+    }
+
+    /**
+     * Tries to fetch inputFileDirectory from args. Else prompt user for directory
+     * @param args Program arguments
+     * @return File directory
+     */
+    static String getInputFileDirectory(String[] args){
         String inputFileDir;
         //Check for dir in args
         if(args.length == 0){
@@ -29,24 +77,7 @@ public class Mortage_Plan {
             //If dir found in args, use that
             inputFileDir = args[0];
         }
-
-        //Get all prospects
-        Prospect[] prospects;
-        try{
-            prospects = getProspects(inputFileDir);
-        }
-        //Catch if file not found
-        catch ( FileNotFoundException error){
-            System.out.printf("File \"%s\" not found. Exiting...%n", inputFileDir);
-            System.exit(0);
-            prospects = new Prospect[0];//Stops warning. Never able to run
-        }
-
-        //Loop through all prospects and display them
-        int index = 0;
-        for(Prospect p : prospects){
-            DisplayProspect(p, ++index);
-        }
+        return inputFileDir;
     }
 
     static void DisplayProspect(Prospect p, int index){
@@ -72,7 +103,7 @@ public class Mortage_Plan {
         int[] totalLoan = {p.TotalLoan, p.TotalLoanDecimal};
         int payments = p.Years * 12;
 
-        //Use floats since we are dealing with division
+        //Use doubles since we are dealing with division
 
         //Calculate b
         double interestPercent = (double)interest[0] / 100 + ((double)interest[1] / 100) / 100;
@@ -211,8 +242,6 @@ public class Mortage_Plan {
         return name;
     }
 
-
-
     /**
      * Read decimal and return as two ints. If no decimal second int will be 0
      * @param input Value to read
@@ -228,11 +257,17 @@ public class Mortage_Plan {
             elements[0] = input;
         }
         int[] toReturn = new int[2];
-        toReturn[0] = Integer.parseInt(elements[0]);
-        if(elements.length == 2){
-            toReturn[1] = Integer.parseInt(elements[1]);
+        try {
+            toReturn[0] = Integer.parseInt(elements[0]);
+            if (elements.length == 2) {
+                toReturn[1] = Integer.parseInt(elements[1]);
+            }
+            //Note toReturn[1] is already set to 0. No need for an else statement
+        }catch (NumberFormatException e){
+            System.out.printf("Error, tried to read %s as number. Returning zero. Please fix input for reliable results", input);
         }
-        //Note toReturn[1] is already set to 0
+
+
         return toReturn;
     }
 }
