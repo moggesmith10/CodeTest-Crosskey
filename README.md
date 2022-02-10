@@ -21,11 +21,16 @@ Build image (Run in CodeTest-Crosskey folder)
 ```
 docker build .
 ```
-Create container
+Create container (get imageID from last command)
 ```
 docker create {imageID}
 ```
-Run container
+Run container (get containerID from last command)
 ```
 docker start -a {containerID}
+```
+## AWS
+Since "Public application [to AWS]" is very up to interpretation and I didn't have time to learn glassfish or similar servlet runner, i've simply made an EC2 instance running Apache serving a zip file of this appliation.
+```
+http://ec2-16-170-248-12.eu-north-1.compute.amazonaws.com/
 ```
