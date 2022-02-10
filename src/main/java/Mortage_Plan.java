@@ -159,7 +159,7 @@ public class Mortage_Plan {
             reader.nextLine();//Skip first line, it contains column titles
         }
         else{
-            System.out.printf("Provided file (%s) is empty...", inputFile.getAbsolutePath());
+            System.out.printf("Provided file (%s) is empty...\n", inputFile.getAbsolutePath());
             return new Prospect[]{};
         }
 
@@ -169,6 +169,7 @@ public class Mortage_Plan {
                 prospectList.add(newProspect);
             }
         }
+        reader.close();
         return prospectList.stream().toArray(Prospect[]::new); //https://stackoverflow.com/questions/52720685/no-suitable-method-found-for-arrayliststring-toarraystringnew-in-return
     }
 
