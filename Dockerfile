@@ -7,4 +7,4 @@ WORKDIR /app
 COPY . .
 
 CMD mvn clean install
-CMD java -jar ./target/CodeTest-Crosskey-1.0-SNAPSHOT.jar .prospects.txt
+CMD java -jar ./target/CodeTest-Crosskey-1.0-SNAPSHOT.jar prospects.txt
