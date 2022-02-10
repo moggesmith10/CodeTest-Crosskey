@@ -160,7 +160,7 @@ public class Mortage_Plan {
         }
         else{
             if(inputFile.canRead()) {
-                System.out.printf("Provided file (%s) is empty...\n", inputFile.getAbsolutePath());
+                System.out.printf("Provided file (%s) is empty (Length %d)...\n", inputFile.getAbsolutePath(), inputFile.length());
             }
             else{
                 System.out.printf("Cant read provided file (%s). Check permissions\n", inputFile.getAbsolutePath());
