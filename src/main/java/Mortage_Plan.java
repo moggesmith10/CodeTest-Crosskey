@@ -1,12 +1,11 @@
+import utilities.Utilities;
+
 import java.io.Console;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import utilities.Utilities;
-
-import javax.sound.midi.SysexMessage;
 
 public class Mortage_Plan {
 
@@ -70,7 +69,7 @@ public class Mortage_Plan {
                 System.exit(1);
             }
             //Prompt for dir
-            System.out.println("Please enter file directory: ");
+            System.out.print("Please enter file directory: ");
             inputFileDir = c.readLine();
         }
         else{
@@ -155,7 +154,14 @@ public class Mortage_Plan {
         File inputFile = new File(fileName);
         Scanner reader = new Scanner(inputFile);
 
-        reader.nextLine();//Skip first line, it contains column titles
+        //Check if empty
+        if(reader.hasNextLine()) {
+            reader.nextLine();//Skip first line, it contains column titles
+        }
+        else{
+            System.out.println("Provided file is empty...");
+            return new Prospect[]{};
+        }
 
         while(reader.hasNextLine()){
             Prospect newProspect = attemptReadProspect(reader.nextLine());
