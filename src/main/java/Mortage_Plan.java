@@ -159,7 +159,12 @@ public class Mortage_Plan {
             reader.nextLine();//Skip first line, it contains column titles
         }
         else{
-            System.out.printf("Provided file (%s) is empty...\n", inputFile.getAbsolutePath());
+            if(inputFile.canRead()) {
+                System.out.printf("Provided file (%s) is empty...\n", inputFile.getAbsolutePath());
+            }
+            else{
+                System.out.printf("Cant read provided file (%s). Check permissions\n", inputFile.getAbsolutePath());
+            }
             return new Prospect[]{};
         }
 
